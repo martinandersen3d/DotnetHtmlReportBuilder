@@ -131,3 +131,5 @@ string htmlReport = reportGenerator.GenerateReport(reportPage);
 
 ## Todo:
 - Its late, refactor to root folder.
+- Add a AddButton() Method to ReportTable
+- Make sure table is optional
