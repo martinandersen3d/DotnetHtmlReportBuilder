@@ -36,20 +36,21 @@ public class HtmlReportGenerator
         sb.AppendLine("<html>");
         sb.AppendLine("<head>");
         sb.AppendLine("<title>HTML Report</title>");
+        sb.AppendLine("<style>body{font-family: Roboto, Lato, \"Lucida Grande\", Tahoma, Sans-Serif;}</style>");
         sb.AppendLine("</head>");
-        sb.AppendLine("<body>");
+        sb.AppendLine("<body><div style='margin-left:auto; margin-right:auto;min-width: 500px; display: inline-block;'>");
 
         foreach (var table in reportPage.Tables)
         {
             sb.AppendLine("<h2>" + table.Title + "</h2>");
             sb.AppendLine("<p>" + table.Description + "</p>");
 
-            sb.AppendLine("<table border='1'>");
+            sb.AppendLine("<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"border-collapse: collapse; width: 100%; max-width: 600px; margin: 0 auto;\">");
             sb.AppendLine("<tr>");
 
             foreach (var header in table.TableHeaders)
             {
-                sb.AppendLine("<th>" + header + "</th>");
+                sb.AppendLine("<th style=\"padding: 4px; background-color: #f0f0f0; text-align: left;\">" + header + "</th>");
             }
 
             sb.AppendLine("</tr>");
@@ -59,7 +60,7 @@ public class HtmlReportGenerator
                 sb.AppendLine("<tr>");
                 foreach (var cell in row)
                 {
-                    sb.AppendLine("<td>" + cell + "</td>");
+                    sb.AppendLine("<td  style=\"padding: 4px; border: 1px solid #cccccc; text-align: left;\">" + cell + "</td>");
                 }
                 sb.AppendLine("</tr>");
             }
@@ -69,16 +70,18 @@ public class HtmlReportGenerator
             // Adding buttons if available
             if (table.Buttons != null && table.Buttons.Length > 0)
             {
-                sb.AppendLine("<div>");
+                sb.AppendLine("<div style='padding-top: 16px;'>");
                 foreach (var button in table.Buttons)
                 {
-                    sb.AppendLine($"<button onclick=\"window.location.href='{button.ButtonUrl}'\">{button.ButtonText}</button>");
+                    sb.AppendLine($"<a href='{button.ButtonUrl}' style=\"background-color: #1DA1F2; color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;display: inline-block;\">{button.ButtonText}</a>");
                 }
                 sb.AppendLine("</div>");
+                sb.AppendLine("<hr style='margin: 16px 0'>");
             }
+
         }
 
-        sb.AppendLine("</body>");
+        sb.AppendLine("</div></body>");
         sb.AppendLine("</html>");
 
         return sb.ToString();
