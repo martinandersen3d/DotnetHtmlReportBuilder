@@ -34,8 +34,8 @@ public class ReportPage : IReportPage
 
 public class ReportButton : IReportButton
 {
-    public string ButtonText { get; set; }
-    public string ButtonUrl { get; set; }
+    public string ButtonText { get; set; } = "";
+    public string ButtonUrl { get; set; } = "";
 }
 
 public class HtmlReportGenerator
@@ -54,30 +54,37 @@ public class HtmlReportGenerator
 
         foreach (var table in reportPage.Tables)
         {
-            sb.AppendLine("<h2>" + table.Title + "</h2>");
-            sb.AppendLine("<p>" + table.Description + "</p>");
+            if (table.Title != "") sb.AppendLine("<h2>" + table.Title + "</h2>");
+
+            if (table.Description != "") sb.AppendLine("<p>" + table.Description + "</p>");
 
             sb.AppendLine("<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"border-collapse: collapse;  margin: 0;\">");
-            sb.AppendLine("<tr>");
 
-            foreach (var header in table.TableHeaders)
-            {
-                sb.AppendLine("<th style=\"padding: 4px 16px 4px 4px; background-color: #f0f0f0; text-align: left; vertical-align: top;\">" + header + "</th>");
-            }
-
-            sb.AppendLine("</tr>");
-
-            foreach (var row in table.TableBody)
+            if (table.TableHeaders != null && table.TableHeaders.Length > 0)
             {
                 sb.AppendLine("<tr>");
-                foreach (var cell in row)
+
+                foreach (var header in table.TableHeaders)
                 {
-                    sb.AppendLine("<td  style=\"padding: 4px; border: 1px solid #cccccc; text-align: left; vertical-align: top;\">" + cell + "</td>");
+                    sb.AppendLine("<th style=\"padding: 4px 16px 4px 4px; background-color: #f0f0f0; text-align: left; vertical-align: top;\">" + header + "</th>");
                 }
                 sb.AppendLine("</tr>");
             }
 
-            sb.AppendLine("</table>");
+            if (table.TableBody != null && table.TableBody.Count > 0)
+            {
+                foreach (var row in table.TableBody)
+                {
+                    sb.AppendLine("<tr>");
+                    foreach (var cell in row)
+                    {
+                        sb.AppendLine("<td  style=\"padding: 4px; border: 1px solid #cccccc; text-align: left; vertical-align: top;\">" + cell + "</td>");
+                    }
+                    sb.AppendLine("</tr>");
+                }
+
+                sb.AppendLine("</table>");
+            }
 
             // Adding buttons if available
             if (table.Buttons != null && table.Buttons.Length > 0)
@@ -99,29 +106,29 @@ public class HtmlReportGenerator
         return sb.ToString();
     }
 }
-
 public class ReportTable : IReportTable
 {
     public string Title { get; set; }
     public string Description { get; set; }
-    public string[] TableHeaders { get; private set; }
-    public List<string[]> TableBody { get; private set; } // Change to List<string[]>
+    public string[]? TableHeaders { get; private set; } // Nullable string array
+    public List<string[]>? TableBody { get; private set; } // Nullable list of string arrays
     public IReportButton[]? Buttons { get; set; }
 
     // Empty constructor
     public ReportTable()
     {
-        TableHeaders = new string[0];
-        TableBody = new List<string[]>(); // Initialize as a new List<string[]>
+        // Initialize as null
+        TableHeaders = null;
+        TableBody = null;
     }
 
     // Constructor with headers
-    public ReportTable(string title, string description, string[] tableHeaders)
+    public ReportTable(string title, string description, string[]? tableHeaders)
     {
         Title = title;
         Description = description;
         TableHeaders = tableHeaders;
-        TableBody = new List<string[]>(); // Initialize as a new List<string[]>
+        TableBody = null; // Initialize as null
     }
 
     public void AddTableHeader(params string[] headers)
@@ -131,6 +138,16 @@ public class ReportTable : IReportTable
 
     public void AddTableRecord(params object[] rowData)
     {
+        if (TableHeaders == null)
+        {
+            throw new InvalidOperationException("Table headers must be set before adding table records.");
+        }
+
+        if (TableBody == null)
+        {
+            TableBody = new List<string[]>(); // Initialize if not already initialized
+        }
+
         if (rowData.Length != TableHeaders.Length)
         {
             throw new ArgumentException("Number of elements in the rowData array must match the number of table headers.");
@@ -167,6 +184,7 @@ public class ReportTable : IReportTable
 
         TableBody.Add(formattedRow); // Add the formatted row to the list
     }
+
     public void AddButton(string buttonText, string buttonUrl)
     {
         if (Buttons == null)
