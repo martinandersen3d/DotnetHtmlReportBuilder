@@ -19,6 +19,7 @@ public interface IReportTable
     IReportButton[]? Buttons { get; set; } // Nullable array of IReportButton
     void AddTableHeader(params string[] headers);
     void AddTableRecord(params object[] rowData);
+    void AddButton(string buttonText, string buttonUrl);
 }
 
 public interface IReportPage
@@ -165,5 +166,18 @@ public class ReportTable : IReportTable
         }
 
         TableBody.Add(formattedRow); // Add the formatted row to the list
+    }
+    public void AddButton(string buttonText, string buttonUrl)
+    {
+        if (Buttons == null)
+        {
+            Buttons = new IReportButton[] { new ReportButton { ButtonText = buttonText, ButtonUrl = buttonUrl } };
+        }
+        else
+        {
+            var list = new List<IReportButton>(Buttons);
+            list.Add(new ReportButton { ButtonText = buttonText, ButtonUrl = buttonUrl });
+            Buttons = list.ToArray();
+        }
     }
 }
