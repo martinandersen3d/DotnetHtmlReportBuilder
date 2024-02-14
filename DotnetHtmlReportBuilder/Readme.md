@@ -9,7 +9,13 @@ This C# program provides a simple HTML report generator that allows you to creat
   - Title
   - Description
   - Table
-    - Converts null, numbers, booleans, text to string
+    - Auto Type Convert to string:
+        - null
+        - numbers
+        - booleans
+        - DateTime
+        - Guid
+        - Most other common types
     - Things it does not understand will be displayed as: `[Error Convertion]`
   - Buttons, with Text and URL
 - Consistency: The formatting looks the same for Web, Email, Gmail, Outlook and Ms Word
