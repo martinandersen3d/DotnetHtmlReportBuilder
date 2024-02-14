@@ -100,7 +100,7 @@ public class HtmlReportGenerator
             // Adding buttons if available
             if (table.Buttons != null && table.Buttons.Length > 0)
             {
-                sb.AppendLine("<div style='padding-top: 16px;'>");
+                sb.AppendLine("<div'>");
                 sb.AppendLine(@" <table cellspacing=""0"" cellpadding=""0"">");
                 sb.AppendLine(@"<tr>");
                 foreach (var button in table.Buttons)
@@ -126,7 +126,7 @@ public class HtmlReportGenerator
     {
         var text = @"
   
-     <td align=""left"" style=""padding: 0 10px 10px 0; "">
+     <td align=""left"" style=""padding: 32px 10px 10px 0; "">
        <table border=""0"" class=""mobile-button"" cellspacing=""0"" cellpadding=""0"">
          <tr>
            <td align=""left"" bgcolor=""#007bff"" style=""background-color: #007bff; margin: auto; max-width: 600px; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; padding: 9px 18px; "" width=""100%"">
