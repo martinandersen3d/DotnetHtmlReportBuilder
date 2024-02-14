@@ -49,8 +49,8 @@ public class HtmlReportGenerator
         sb.AppendLine("<head>");
         sb.AppendLine("<title>HTML Report</title>");
         sb.AppendLine("<style>");
-        sb.AppendLine("body{color: #333; padding:25px; line-height: 1.5; font-family: Lato, Roboto, Arial, \"Lucida Grande\", Tahoma, Sans-Serif;background-color: #efefef  ;}");
-        sb.AppendLine(".shadow{box-shadow: 0 0 40px 0 rgba(0,0,0,.15);-moz-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);-webkit-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);-o-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);-ms-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);}");
+        sb.AppendLine("body{color: #333; padding:25px; line-height: 1.5; font-family: Lato, Roboto, Arial, \"Lucida Grande\", Tahoma, Sans-Serif;}");
+        // sb.AppendLine(".shadow{box-shadow: 0 0 40px 0 rgba(0,0,0,.15);-moz-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);-webkit-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);-o-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);-ms-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);}");
         sb.AppendLine("</style>");
         sb.AppendLine("</head>");
         sb.AppendLine("<body><div>");
@@ -61,7 +61,7 @@ public class HtmlReportGenerator
 
             if (table.Description != "") sb.AppendLine("<p>" + table.Description + "</p>");
 
-            sb.AppendLine("<table class=\"shadow\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\"  style=\"border-collapse: collapse; border-radius: 10px; overflow: hidden; border: 1px solid #2f3030;\" >");
+            sb.AppendLine("<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"  style=\"border-collapse: collapse; overflow: hidden; border: 1px solid #2f3030;\" >");
 
             // TABLE HEADERS
             if (table.TableHeaders != null && table.TableHeaders.Length > 0)
@@ -70,7 +70,7 @@ public class HtmlReportGenerator
 
                 foreach (var header in table.TableHeaders)
                 {
-                    sb.AppendLine("<th style=\"padding: 16px 18px 16px 16px; color:white; font-size:15px; background-color:#2f3030;text-align: left; font-weight: normal; vertical-align: top;\">" + header + "</th>");
+                    sb.AppendLine("<th style=\"padding: 16px 16px 16px 16px; color:white; font-size:15px; background-color:#2f3030;text-align: left; font-weight: normal; vertical-align: top;\">" + header + "</th>");
                 }
                 sb.AppendLine("</tr>");
             }
@@ -101,10 +101,14 @@ public class HtmlReportGenerator
             if (table.Buttons != null && table.Buttons.Length > 0)
             {
                 sb.AppendLine("<div style='padding-top: 16px;'>");
+                sb.AppendLine(@" <table cellspacing=""0"" cellpadding=""0"">");
+                sb.AppendLine(@"<tr>");
                 foreach (var button in table.Buttons)
                 {
-                    sb.AppendLine($"<a href='{button.ButtonUrl}' style=\"background-color: #1DA1F2; color: white; text-decoration: none; padding: 10px 20px; border-radius: 5px; cursor: pointer;display: inline-block;\">{button.ButtonText}</a>");
+                    sb.AppendLine(GenerateButton(button.ButtonText, button.ButtonUrl));
                 }
+                sb.AppendLine("</tr>");
+                sb.AppendLine("</table>");
                 sb.AppendLine("</div>");
             }
             sb.AppendLine("<hr style='margin: 24px 0 8px'>");
@@ -115,6 +119,29 @@ public class HtmlReportGenerator
         sb.AppendLine("</html>");
 
         return sb.ToString();
+    }
+
+    // Outlook email: yes all this is needed to render correctly in Outlook
+    private string GenerateButton(string buttonText, string buttonUrl)
+    {
+        var text = @"
+  
+     <td align=""left"" style=""padding: 0 10px 10px 0; "">
+       <table border=""0"" class=""mobile-button"" cellspacing=""0"" cellpadding=""0"">
+         <tr>
+           <td align=""left"" bgcolor=""#007bff"" style=""background-color: #007bff; margin: auto; max-width: 600px; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; padding: 9px 18px; "" width=""100%"">
+           <!--[if mso]>&nbsp;<![endif]-->
+               <a href=""__BUTTONURL__"" target=""_blank"" style=""15px; font-family: Arial, sans-serif; color: #ffffff; font-weight:normal; text-align:center; background-color: #007bff; text-decoration: none; border: none; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; display: inline-block;"">
+                   <span style=""font-size: 15px; font-family: Arial, sans-serif; color: #ffffff; font-weight:normal; line-height:1.5em; text-align:center;"">__BUTTONTEXT__</span>
+             </a>
+           <!--[if mso]>&nbsp;<![endif]-->
+           </td>
+         </tr>
+       </table>
+     </td>
+";
+
+        return text.Replace("__BUTTONURL__", buttonUrl).Replace("__BUTTONTEXT__", buttonText);
     }
 }
 public class ReportTable : IReportTable
