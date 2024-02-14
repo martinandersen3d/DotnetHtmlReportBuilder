@@ -49,7 +49,7 @@ public class HtmlReportGenerator
         sb.AppendLine("<head>");
         sb.AppendLine("<title>HTML Report</title>");
         sb.AppendLine("<style>");
-        sb.AppendLine("body{color: #333; padding:25px; line-height: 1.5; font-family: Lato, Roboto,  \"Lucida Grande\", Tahoma, Sans-Serif;background-color: #efefef  ;}");
+        sb.AppendLine("body{color: #333; padding:25px; line-height: 1.5; font-family: Lato, Roboto, Arial, \"Lucida Grande\", Tahoma, Sans-Serif;background-color: #efefef  ;}");
         sb.AppendLine(".shadow{box-shadow: 0 0 40px 0 rgba(0,0,0,.15);-moz-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);-webkit-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);-o-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);-ms-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);}");
         sb.AppendLine("</style>");
         sb.AppendLine("</head>");
@@ -82,8 +82,8 @@ public class HtmlReportGenerator
                 foreach (var row in table.TableBody)
                 {
                     // Color every second tr
-                    var style = counter % 2 == 1  ? " style=\"background-color:rgb(242, 242, 242);\"" : " style=\"background-color:white;\""; 
-                    sb.AppendLine( string.Format("<tr{0}>", style) );
+                    var style = counter % 2 == 1  ? "background-color:rgb(242, 242, 242);" : "background-color:white;"; 
+                    sb.AppendLine( string.Format("<tr style=\"{0}\">", style) );
 
                     foreach (var cell in row)
                     {
