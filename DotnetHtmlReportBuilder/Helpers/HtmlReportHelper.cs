@@ -48,7 +48,10 @@ public class HtmlReportGenerator
         sb.AppendLine("<html>");
         sb.AppendLine("<head>");
         sb.AppendLine("<title>HTML Report</title>");
-        sb.AppendLine("<style>body{color: #333; line-height: 1.5; font-family: Roboto, Lato, \"Lucida Grande\", Tahoma, Sans-Serif;}</style>");
+        sb.AppendLine("<style>");
+        sb.AppendLine("body{color: #333; padding:25px; line-height: 1.5; font-family: Lato, Roboto,  \"Lucida Grande\", Tahoma, Sans-Serif;background-color: #efefef  ;}");
+        sb.AppendLine(".shadow{box-shadow: 0 0 40px 0 rgba(0,0,0,.15);-moz-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);-webkit-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);-o-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);-ms-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);}");
+        sb.AppendLine("</style>");
         sb.AppendLine("</head>");
         sb.AppendLine("<body><div>");
 
@@ -58,29 +61,37 @@ public class HtmlReportGenerator
 
             if (table.Description != "") sb.AppendLine("<p>" + table.Description + "</p>");
 
-            sb.AppendLine("<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\" style=\"border-collapse: collapse;  margin: 0;\">");
+            sb.AppendLine("<table class=\"shadow\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\"  style=\"border-collapse: collapse; border-radius: 10px; overflow: hidden;\" >");
 
+            // TABLE HEADERS
             if (table.TableHeaders != null && table.TableHeaders.Length > 0)
             {
                 sb.AppendLine("<tr>");
 
                 foreach (var header in table.TableHeaders)
                 {
-                    sb.AppendLine("<th style=\"padding: 4px 16px 4px 4px; background-color: #f0f0f0; text-align: left; vertical-align: top;\">" + header + "</th>");
+                    sb.AppendLine("<th style=\"padding: 20px 18px 20px 18px; color:white; font-size:18px; background-color:#2f3030;text-align: left; font-weight: normal; vertical-align: top;\">" + header + "</th>");
                 }
                 sb.AppendLine("</tr>");
             }
 
+            // TABLE BODY
             if (table.TableBody != null && table.TableBody.Count > 0)
             {
+                var counter = 0;
                 foreach (var row in table.TableBody)
                 {
-                    sb.AppendLine("<tr>");
+                    // Color every second tr
+                    var style = counter % 2 == 1  ? " style=\"background-color:rgb(242, 242, 242);\"" : " style=\"background-color:white;\""; 
+                    sb.AppendLine( string.Format("<tr{0}>", style) );
+
                     foreach (var cell in row)
                     {
-                        sb.AppendLine("<td  style=\"padding: 4px; border: 1px solid #cccccc; text-align: left; vertical-align: top;\">" + cell + "</td>");
+                        sb.AppendLine($"<td  style=\"padding: 10px 16px 10px 16px; border-top: 0px solid #cccccc; text-align: left; font-size:15px; line-height: 1.2; vertical-align: top; color: gray;\">" + cell + "</td>");
+                        
                     }
                     sb.AppendLine("</tr>");
+                    counter++;
                 }
 
                 sb.AppendLine("</table>");
