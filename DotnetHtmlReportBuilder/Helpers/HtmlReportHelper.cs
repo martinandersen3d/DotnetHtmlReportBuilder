@@ -61,7 +61,7 @@ public class HtmlReportGenerator
 
             if (table.Description != "") sb.AppendLine("<p>" + table.Description + "</p>");
 
-            sb.AppendLine("<table class=\"shadow\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\"  style=\"border-collapse: collapse; border-radius: 10px; overflow: hidden;\" >");
+            sb.AppendLine("<table class=\"shadow\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\"  style=\"border-collapse: collapse; border-radius: 10px; overflow: hidden; border: 1px solid #2f3030;\" >");
 
             // TABLE HEADERS
             if (table.TableHeaders != null && table.TableHeaders.Length > 0)
@@ -70,7 +70,7 @@ public class HtmlReportGenerator
 
                 foreach (var header in table.TableHeaders)
                 {
-                    sb.AppendLine("<th style=\"padding: 20px 18px 20px 18px; color:white; font-size:18px; background-color:#2f3030;text-align: left; font-weight: normal; vertical-align: top;\">" + header + "</th>");
+                    sb.AppendLine("<th style=\"padding: 16px 18px 16px 16px; color:white; font-size:15px; background-color:#2f3030;text-align: left; font-weight: normal; vertical-align: top;\">" + header + "</th>");
                 }
                 sb.AppendLine("</tr>");
             }
