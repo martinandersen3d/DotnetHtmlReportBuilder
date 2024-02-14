@@ -12,7 +12,7 @@ This C# program provides a simple HTML report generator that allows you to creat
     - Converts null, numbers, booleans, text to string
     - Things it does not understand will be displayed as: `[Error Convertion]`
   - Buttons, with Text and URL
-- Ok support for Email formatting
+- Ok support for Email formatting, looks the same in gmail, Outlook and Ms Word
 
 ## Table of Contents
 
@@ -130,6 +130,8 @@ string htmlReport = reportGenerator.GenerateReport(reportPage);
 ---
 
 ## Todo:
-- Its late, refactor to root folder.
-- Add a AddButton() Method to ReportTable
-- Make sure table is optional
+[  ] refactor to root folder.
+[  ] Minor bug in word where table headers looks off
+[  ] Implement AddTables methods
+[ x ] Add a AddButton() Method to ReportTable
+[ x ] Make sure table is optional
