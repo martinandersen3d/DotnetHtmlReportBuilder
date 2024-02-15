@@ -49,7 +49,10 @@ public class HtmlReportGenerator
         sb.AppendLine("<head>");
         sb.AppendLine("<title>HTML Report</title>");
         sb.AppendLine("<style>");
-        sb.AppendLine("body{color: #333; padding:25px; line-height: 1.5; font-family: Lato, Roboto, Arial, \"Lucida Grande\", Tahoma, Sans-Serif;}");
+        sb.AppendLine("body{color: #333; padding:25px; line-height: 1.5; font-family: Aptos, Lato, Roboto, Arial, \"Lucida Grande\", Tahoma, Sans-Serif;}");
+        // HACK: Outlook does not like fontsize using 'px', so we use 'pt' inline on the element, and override it with 'px' here. It gives the most consistent result
+        sb.AppendLine("td, th, a {font-size:16px !important;}");
+        sb.AppendLine("p, span {font-size:16px !important;}");
         // sb.AppendLine(".shadow{box-shadow: 0 0 40px 0 rgba(0,0,0,.15);-moz-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);-webkit-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);-o-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);-ms-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);}");
         sb.AppendLine("</style>");
         sb.AppendLine("</head>");
@@ -59,20 +62,29 @@ public class HtmlReportGenerator
         {
             if (table.Title != "") sb.AppendLine("<h2>" + table.Title + "</h2>");
 
-            if (table.Description != "") sb.AppendLine("<p>" + table.Description + "</p>");
+            if (table.Description != "") sb.AppendLine("<p style=\"font-size:11pt;\">" + table.Description + "</p>");
 
             sb.AppendLine("<table cellspacing=\"0\" cellpadding=\"0\" border=\"0\"  style=\"border-collapse: collapse; overflow: hidden; border: 1px solid #2f3030;\" >");
 
             // TABLE HEADERS
             if (table.TableHeaders != null && table.TableHeaders.Length > 0)
             {
-                sb.AppendLine("<tr>");
+                var counter = 1;
+                var total = table.TableHeaders.Length;
 
+                sb.AppendLine("<thead><tr style=\"height:40px;\">");
+                
                 foreach (var header in table.TableHeaders)
                 {
-                    sb.AppendLine("<th style=\"padding: 16px 16px 16px 16px; color:white; font-size:15px; background-color:#2f3030;text-align: left; font-weight: normal; vertical-align: top;\">" + header + "</th>");
+                    var str = "";
+                    if ( counter >= 1 && counter != total ) str+= "padding-left: 16px;";
+                    if ( total == counter && counter > 1 ) str+= "padding-left: 16px; padding-right: 16px;";
+                    if ( total == counter && counter == 1 ) str+= "padding-left: 16px; padding-right: 16px;";
+
+                    sb.AppendLine("<th style=\""+ str + "font-size:10pt; color:white; background-color:#2f3030;text-align: left; font-weight: normal; vertical-align: middle;\">" + header + "</th>");
+                    counter++;
                 }
-                sb.AppendLine("</tr>");
+                sb.AppendLine("</tr></thead>");
             }
 
             // TABLE BODY
@@ -87,7 +99,7 @@ public class HtmlReportGenerator
 
                     foreach (var cell in row)
                     {
-                        sb.AppendLine($"<td  style=\"padding: 10px 16px 10px 16px; border-top: 0px solid #cccccc; text-align: left; font-size:15px; line-height: 1.2; vertical-align: top; color: gray;\">" + cell + "</td>");
+                        sb.AppendLine($"<td  style=\"font-size:10pt; padding: 10px 16px 10px 16px; border-top: 0px solid #cccccc; text-align: left; line-height: 1.2; vertical-align: top; color: gray;\">" + cell + "</td>");
                         
                     }
                     sb.AppendLine("</tr>");
@@ -131,8 +143,8 @@ public class HtmlReportGenerator
          <tr>
            <td align=""left"" bgcolor=""#007bff"" style=""background-color: #007bff; margin: auto; max-width: 600px; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; padding: 9px 18px; "" width=""100%"">
            <!--[if mso]>&nbsp;<![endif]-->
-               <a href=""__BUTTONURL__"" target=""_blank"" style=""15px; font-family: Arial, sans-serif; color: #ffffff; font-weight:normal; text-align:center; background-color: #007bff; text-decoration: none; border: none; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; display: inline-block;"">
-                   <span style=""font-size: 15px; font-family: Arial, sans-serif; color: #ffffff; font-weight:normal; line-height:1.5em; text-align:center;"">__BUTTONTEXT__</span>
+               <a href=""__BUTTONURL__"" target=""_blank"" style=""font-family: Arial, sans-serif; color: #ffffff; font-weight:normal; text-align:center; background-color: #007bff; text-decoration: none; border: none; -webkit-border-radius: 4px; -moz-border-radius: 4px; border-radius: 4px; display: inline-block;"">
+                   <span style=""font-size: 11pt; font-family: Arial, sans-serif; color: #ffffff; font-weight:normal; line-height:1.5em; text-align:center;"">__BUTTONTEXT__</span>
              </a>
            <!--[if mso]>&nbsp;<![endif]-->
            </td>
