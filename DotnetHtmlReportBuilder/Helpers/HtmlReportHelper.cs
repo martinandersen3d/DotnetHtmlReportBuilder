@@ -56,17 +56,18 @@ public class HtmlReportGenerator
         // sb.AppendLine(".shadow{box-shadow: 0 0 40px 0 rgba(0,0,0,.15);-moz-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);-webkit-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);-o-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);-ms-box-shadow: 0 0 40px 0 rgba(0,0,0,.15);}");
         sb.AppendLine(".data-table tr:hover>td {background-color:#dbf4ff;}");
         sb.AppendLine(".data-table tr:hover { outline: 1px solid  #007bff;}");
+        sb.AppendLine(".data-table {border-radius: 4px;border-collapse: separate !important; border-spacing: 0 !important;}");
         sb.AppendLine("</style>");
         sb.AppendLine("</head>");
         sb.AppendLine("<body><div>");
 
         foreach (var table in reportPage.Tables)
         {
-            if (table.Title != "") sb.AppendLine("<h2>" + table.Title + "</h2>");
+            if (table.Title != "" && table.Title != null) sb.AppendLine("<h2>" + table.Title + "</h2>");
 
-            if (table.Description != "") sb.AppendLine("<p style=\"font-size:11pt;\">" + table.Description + "</p>");
-
-            sb.AppendLine("<table class=\"data-table\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\"  style=\"border-collapse: collapse; overflow: hidden; border: 1px solid #2f3030;\" >");
+            if (table.Description != "" && table.Description != null) sb.AppendLine("<p style=\"font-size:11pt;\">" + table.Description + "</p>");
+            if (table.TableBody != null || table.TableHeaders != null)  
+                sb.AppendLine("<table class=\"data-table\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\"  style=\"border-collapse: collapse; overflow: hidden; border: 1px solid #2f3030;\" >");
 
             // TABLE HEADERS
             if (table.TableHeaders != null && table.TableHeaders.Length > 0)
@@ -108,8 +109,8 @@ public class HtmlReportGenerator
                     counter++;
                 }
 
-                sb.AppendLine("</table>");
             }
+            if (table.TableBody != null || table.TableHeaders != null) sb.AppendLine("</table>");
 
             // Adding buttons if available
             if (table.Buttons != null && table.Buttons.Length > 0)
@@ -190,20 +191,20 @@ public class ReportTable : IReportTable
 
     public void AddTableRecord(params object[] rowData)
     {
-        if (TableHeaders == null)
-        {
-            throw new InvalidOperationException("Table headers must be set before adding table records.");
-        }
+        // if (TableHeaders == null)
+        // {
+        //     throw new InvalidOperationException("Table headers must be set before adding table records.");
+        // }
 
         if (TableBody == null)
         {
             TableBody = new List<string[]>(); // Initialize if not already initialized
         }
 
-        if (rowData.Length != TableHeaders.Length)
-        {
-            throw new ArgumentException("Number of elements in the rowData array must match the number of table headers.");
-        }
+        // if (rowData.Length != TableHeaders.Length)
+        // {
+        //     throw new ArgumentException("Number of elements in the rowData array must match the number of table headers.");
+        // }
 
         string[] formattedRow = new string[rowData.Length];
         for (int i = 0; i < rowData.Length; i++)

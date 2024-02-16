@@ -51,11 +51,19 @@ class Program
         table4.AddTableRecord("2", "Description", "Just demonstrating a table, without title and description");
         table4.AddTableRecord("3", "John", "Doe");
 
+        // TABLE 5 -------------------------------------------------------
+        var table5 = new ReportTable();
+        table5.Title = "Title 5 Example";
+        table5.Description = "No table headers.";
+        table5.AddTableRecord("1", "Table", "4"); // null value is treated as empty string
+        table5.AddTableRecord("2", "Description", "Just demonstrating a table, without title and description");
+        table5.AddTableRecord("3", "John", "Doe");
+
         // Creating Report Page ------------------------------------------
 
         var reportPage = new ReportPage
         {
-            Tables = new IReportTable[] { table1, table2, table3, table4 /*, add more tables here */}
+            Tables = new IReportTable[] { table1, table2, table3, table4, table5  /*, add more tables here */}
         };
 
         // Generating HTML report
