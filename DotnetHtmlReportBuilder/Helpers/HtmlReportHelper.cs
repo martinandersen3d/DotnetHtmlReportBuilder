@@ -17,7 +17,7 @@ public interface IReportTable
     string[] TableHeaders { get; }
     List<string[]> TableBody { get; }
     IReportButton[]? Buttons { get; set; } // Nullable array of IReportButton
-    void AddTableHeader(params string[] headers);
+    void SetTableHeader(params string[] headers);
     void AddTableRecord(params object[] rowData);
     void AddButton(string buttonText, string buttonUrl);
 }
@@ -25,11 +25,37 @@ public interface IReportTable
 public interface IReportPage
 {
     IReportTable[] Tables { get; set; }
+    void AddReportTable(IReportTable table);
+    void AddReportTables(params IReportTable[] tables);
 }
 
 public class ReportPage : IReportPage
 {
     public IReportTable[] Tables { get; set; }
+
+    public ReportPage()
+    {
+        Tables = Array.Empty<IReportTable>();
+    }
+
+    public ReportPage(params IReportTable[] tables)
+    {
+        Tables = tables;
+    }
+
+    public void AddReportTable(IReportTable table)
+    {
+        List<IReportTable> tableList = new List<IReportTable>(Tables);
+        tableList.Add(table);
+        Tables = tableList.ToArray();
+    }
+
+    public void AddReportTables(params IReportTable[] tables)
+    {
+        List<IReportTable> tableList = new List<IReportTable>(Tables);
+        tableList.AddRange(tables);
+        Tables = tableList.ToArray();
+    }
 }
 
 public class ReportButton : IReportButton
@@ -66,7 +92,7 @@ public class HtmlReportGenerator
             if (table.Title != "" && table.Title != null) sb.AppendLine("<h2>" + table.Title + "</h2>");
 
             if (table.Description != "" && table.Description != null) sb.AppendLine("<p style=\"font-size:11pt;\">" + table.Description + "</p>");
-            if (table.TableBody != null || table.TableHeaders != null)  
+            if (table.TableBody != null || table.TableHeaders != null)
                 sb.AppendLine("<table class=\"data-table\" cellspacing=\"0\" cellpadding=\"0\" border=\"0\"  style=\"border-collapse: collapse; overflow: hidden; border: 1px solid #2f3030;\" >");
 
             // TABLE HEADERS
@@ -76,15 +102,15 @@ public class HtmlReportGenerator
                 var total = table.TableHeaders.Length;
 
                 sb.AppendLine("<thead><tr style=\"height:40px;\">");
-                
+
                 foreach (var header in table.TableHeaders)
                 {
                     var str = "";
-                    if ( counter >= 1 && counter != total ) str+= "padding-left: 16px;";
-                    if ( total == counter && counter > 1 ) str+= "padding-left: 16px; padding-right: 16px;";
-                    if ( total == counter && counter == 1 ) str+= "padding-left: 16px; padding-right: 16px;";
+                    if (counter >= 1 && counter != total) str += "padding-left: 16px;";
+                    if (total == counter && counter > 1) str += "padding-left: 16px; padding-right: 16px;";
+                    if (total == counter && counter == 1) str += "padding-left: 16px; padding-right: 16px;";
 
-                    sb.AppendLine("<th style=\""+ str + "font-size:10pt; color:white; background-color:#2f3030;text-align: left; font-weight: normal; vertical-align: middle;\">" + header + "</th>");
+                    sb.AppendLine("<th style=\"" + str + "font-size:10pt; color:white; background-color:#2f3030;text-align: left; font-weight: normal; vertical-align: middle;\">" + header + "</th>");
                     counter++;
                 }
                 sb.AppendLine("</tr></thead>");
@@ -97,13 +123,13 @@ public class HtmlReportGenerator
                 foreach (var row in table.TableBody)
                 {
                     // Color every second tr
-                    var style = counter % 2 == 1  ? "background-color:rgb(242, 242, 242);" : "background-color:white;"; 
-                    sb.AppendLine( string.Format("<tr style=\"{0}\">", style) );
+                    var style = counter % 2 == 1 ? "background-color:rgb(242, 242, 242);" : "background-color:white;";
+                    sb.AppendLine(string.Format("<tr style=\"{0}\">", style));
 
                     foreach (var cell in row)
                     {
                         sb.AppendLine($"<td  style=\"font-size:10pt; padding: 10px 16px 10px 16px; border-top: 0px solid #cccccc; text-align: left; line-height: 1.2; vertical-align: top; color: gray;\">" + cell + "</td>");
-                        
+
                     }
                     sb.AppendLine("</tr>");
                     counter++;
@@ -184,7 +210,7 @@ public class ReportTable : IReportTable
         TableBody = null; // Initialize as null
     }
 
-    public void AddTableHeader(params string[] headers)
+    public void SetTableHeader(params string[] headers)
     {
         TableHeaders = headers;
     }

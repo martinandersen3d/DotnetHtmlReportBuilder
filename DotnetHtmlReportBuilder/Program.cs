@@ -15,7 +15,7 @@ class Program
         var table1 = new ReportTable();
         table1.Title = "Title 1 Example";
         table1.Description = "Description for table 1";
-        table1.AddTableHeader("Header 1", "Header 2", "Header 3");
+        table1.SetTableHeader("Header 1", "Header 2", "Header 3");
 
         table1.AddTableRecord("Data 1", "Data 2", "Data 3"); // null value is treated as empty string
         table1.AddTableRecord("Data 4", "Data 5", "Data 6");
@@ -31,7 +31,7 @@ class Program
         var table2 = new ReportTable();
         table2.Title = "Title 2 Example";
         table2.Description = "Description for table 2, Description for table 2, Description for table 2, Description for table 2, Description for table 2, Description for table 2, Description for table 2, Description for table 2, Description for table 2, Description for table 2";
-        table2.AddTableHeader("Header A", "Header B", "Header C", "Header D");
+        table2.SetTableHeader("Header A", "Header B", "Header C", "Header D");
 
         table2.AddTableRecord("Data A1", "Data B1", "Data C1", "Data D1");
         table2.AddTableRecord("Data A2", "Data B2 Data B2 Data B2 Data B2 Data B2 Data B2 Data B2 Data B2 Data B2 ", "Data C2", "Data D2");
@@ -45,7 +45,7 @@ class Program
 
         // TABLE 4 -------------------------------------------------------
         var table4 = new ReportTable();
-        table4.AddTableHeader("Id", "Key", "Value");
+        table4.SetTableHeader("Id", "Key", "Value");
 
         table4.AddTableRecord("1", "Table", "4"); // null value is treated as empty string
         table4.AddTableRecord("2", "Description", "Just demonstrating a table, without title and description");
@@ -61,10 +61,9 @@ class Program
 
         // Creating Report Page ------------------------------------------
 
-        var reportPage = new ReportPage
-        {
-            Tables = new IReportTable[] { table1, table2, table3, table4, table5  /*, add more tables here */}
-        };
+        var reportPage = new ReportPage(); // Using the empty constructor
+
+        reportPage.AddReportTables(table1, table2, table3, table4, table5 /* add more tables here */);
 
         // Generating HTML report
         var reportGenerator = new HtmlReportGenerator();
